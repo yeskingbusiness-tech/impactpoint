@@ -25,6 +25,31 @@ Everyone on your network opens the host's address (the server prints its LAN IPs
 `http://192.168.1.20:8080`). One player hosts, the others join from the browser list or the
 5-character room code shown in the lobby. No internet required.
 
+## Deploy on Render
+
+The repo ships with a `render.yaml` blueprint, so deployment takes about two minutes:
+
+1. **Push this repo to GitHub** (already the case if you're reading it there).
+2. Go to [dashboard.render.com](https://dashboard.render.com) → **New** → **Blueprint**.
+3. Connect the GitHub repo `yeskingbusiness-tech/impactpoint`. Render reads `render.yaml`
+   and creates the web service (Node, `npm install` / `npm start`, health check `/api/status`).
+   - Prefer manual setup? **New → Web Service**, pick the repo, then set
+     Build Command `npm install`, Start Command `npm start`, and the same health check path.
+4. **Branch:** by default Render deploys `main`. This project lives on `arena/d3399585-impactpoint`,
+   so either merge it into `main` first, or in the service settings set **Branch** to
+   `arena/d3399585-impactpoint` (or add `branch: arena/d3399585-impactpoint` to `render.yaml`).
+5. Deploy — when the health check goes green, share your URL
+   (`https://impactpoint-arena.onrender.com`). Everyone opens that same address and hosts/joins
+   as usual. The client automatically uses `wss://` on HTTPS, so no config is needed.
+
+Notes for Render:
+
+- The server reads Render's `PORT` env var and binds `0.0.0.0` — no extra configuration.
+- **Free instances sleep** after ~15 min without traffic (a sleeping server feels dead until it
+  wakes). For a game server your friends can hit any time, set the plan to **Starter**.
+- All match state lives in memory: if the instance restarts, open arenas vanish (players just
+  re-host). Nothing else is persisted, so there's no database or disk to set up.
+
 ## Controls
 
 | Action | Keyboard | Gamepad |

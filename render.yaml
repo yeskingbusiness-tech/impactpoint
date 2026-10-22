@@ -1,0 +1,12 @@
+# Render Blueprint — deploy ImpactPoint Arena with "New from Blueprint"
+# (or just use these values as the settings when creating a Web Service manually)
+services:
+  - type: web
+    name: impactpoint-arena
+    runtime: node
+    region: ohio          # US East (Ohio) — change if your players are elsewhere
+    plan: free            # swap to "starter" for an always-on game server (free tier sleeps)
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/status
+    autoDeploy: true      # redeploys on push to the connected branch
