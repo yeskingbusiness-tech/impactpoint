@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+<title>ImpactPoint Arena — LAN Platform Fighter</title>
+<link rel="stylesheet" href="css/style.css" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='80' font-size='80'>💥</text></svg>" />
+</head>
+<body>
+<div id="app">
+  <canvas id="game"></canvas>
+
+  <!-- ============================ TITLE ============================ -->
+  <section class="screen active" id="screen-title">
+    <div class="title-wrap">
+      <div class="logo">
+        <div class="logo-impact">IMPACT<span class="logo-point">POINT</span></div>
+        <div class="logo-arena">A R E N A</div>
+        <div class="logo-tag">LAN MULTIPLAYER PLATFORM FIGHTER</div>
+      </div>
+      <div class="title-card">
+        <label class="field-label" for="player-name">FIGHTER NAME</label>
+        <input id="player-name" maxlength="16" autocomplete="off" spellcheck="false" placeholder="Player" />
+        <button class="btn btn-primary btn-big" id="btn-press-start">PRESS START</button>
+        <div class="title-hint">Host a match, browse arenas, or quick-play with CPUs — share your address for LAN battles.</div>
+      </div>
+      <div class="title-footer">v1.0 · up to 4 players · keyboard + gamepad</div>
+    </div>
+  </section>
+
+  <!-- ============================ MENU ============================ -->
+  <section class="screen" id="screen-menu">
+    <div class="menu-wrap">
+      <h1 class="screen-title">MAIN MENU</h1>
+      <div class="menu-grid">
+        <button class="menu-btn" id="btn-quickplay">
+          <span class="menu-icon">⚡</span>
+          <span class="menu-name">QUICK PLAY</span>
+          <span class="menu-desc">Instant match with CPU fighters</span>
+        </button>
+        <button class="menu-btn" id="btn-host">
+          <span class="menu-icon">🏠</span>
+          <span class="menu-name">HOST MATCH</span>
+          <span class="menu-desc">Create an arena for others to join</span>
+        </button>
+        <button class="menu-btn" id="btn-join">
+          <span class="menu-icon">🔍</span>
+          <span class="menu-name">JOIN MATCH</span>
+          <span class="menu-desc">Browse arenas or enter a room code</span>
+        </button>
+        <button class="menu-btn" id="btn-howto">
+          <span class="menu-icon">📖</span>
+          <span class="menu-name">HOW TO PLAY</span>
+          <span class="menu-desc">Controls and combat basics</span>
+        </button>
+      </div>
+      <div class="menu-foot">
+        <div class="net-status" id="net-status">● connecting…</div>
+        <button class="btn btn-ghost" id="btn-settings">SETTINGS</button>
+        <button class="btn btn-ghost" id="btn-change-name">CHANGE NAME</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ HOST ============================ -->
+  <section class="screen" id="screen-host">
+    <div class="panel-wrap">
+      <h1 class="screen-title">HOST MATCH</h1>
+      <div class="panel">
+        <label class="field-label" for="room-name">ARENA NAME</label>
+        <input id="room-name" maxlength="24" placeholder="My Epic Arena" />
+        <label class="field-label">STAGE</label>
+        <div class="stage-select" id="host-stage-select"></div>
+        <div class="row-2">
+          <div>
+            <label class="field-label" for="host-stocks">STOCKS: <b id="host-stocks-val">3</b></label>
+            <input type="range" id="host-stocks" min="1" max="9" value="3" />
+          </div>
+          <div>
+            <label class="field-label" for="host-time">TIME LIMIT: <b id="host-time-val">8 min</b></label>
+            <input type="range" id="host-time" min="2" max="20" value="8" />
+          </div>
+        </div>
+        <label class="field-label" for="host-max">MAX PLAYERS: <b id="host-max-val">4</b></label>
+        <input type="range" id="host-max" min="2" max="4" value="4" />
+        <div class="btn-row">
+          <button class="btn btn-ghost" id="btn-host-back">BACK</button>
+          <button class="btn btn-primary btn-big" id="btn-create-room">CREATE ARENA</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ JOIN ============================ -->
+  <section class="screen" id="screen-join">
+    <div class="panel-wrap wide">
+      <h1 class="screen-title">JOIN MATCH</h1>
+      <div class="panel">
+        <div class="join-top">
+          <div class="code-row">
+            <label class="field-label" for="join-code">ROOM CODE</label>
+            <div class="code-input-row">
+              <input id="join-code" maxlength="8" placeholder="ABCD-12" spellcheck="false" autocomplete="off" />
+              <button class="btn btn-primary" id="btn-join-code">JOIN</button>
+            </div>
+          </div>
+          <div class="join-status" id="join-status">Searching for arenas…</div>
+        </div>
+        <div class="room-list" id="room-list"></div>
+        <div class="btn-row">
+          <button class="btn btn-ghost" id="btn-join-back">BACK</button>
+          <button class="btn btn-ghost" id="btn-refresh-rooms">REFRESH</button>
+          <button class="btn btn-primary" id="btn-quickplay-2">QUICK PLAY</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ HOW TO ============================ -->
+  <section class="screen" id="screen-howto">
+    <div class="panel-wrap wide">
+      <h1 class="screen-title">HOW TO PLAY</h1>
+      <div class="panel howto">
+        <div class="howto-cols">
+          <div>
+            <h3>KEYBOARD</h3>
+            <table class="key-table">
+              <tr><td><b>WASD</b> / <b>Arrows</b></td><td>Move, jump, fast-fall, drop through</td></tr>
+              <tr><td><b>Space</b> / <b>W</b></td><td>Jump (twice for double jump)</td></tr>
+              <tr><td><b>J</b> / <b>Z</b></td><td>Light attack (direction = tilt / aerial)</td></tr>
+              <tr><td><b>K</b> / <b>X</b></td><td>Smash attack (direction = forward/up/down)</td></tr>
+              <tr><td><b>L</b> / <b>C</b></td><td>Special (direction = side/up/down)</td></tr>
+              <tr><td><b>Shift</b> / <b>Q</b></td><td>Hold to shield · tap + direction to dodge</td></tr>
+              <tr><td><b>Esc</b> / <b>P</b></td><td>Pause menu</td></tr>
+            </table>
+            <h3>GAMEPAD</h3>
+            <table class="key-table">
+              <tr><td><b>Stick / D-pad</b></td><td>Move</td></tr>
+              <tr><td><b>A</b></td><td>Jump</td></tr>
+              <tr><td><b>X</b> / <b>Y</b></td><td>Light / Smash attack</td></tr>
+              <tr><td><b>B</b></td><td>Special</td></tr>
+              <tr><td><b>LB / RB</b></td><td>Shield</td></tr>
+            </table>
+          </div>
+          <div>
+            <h3>THE RULES</h3>
+            <ul class="rules-list">
+              <li>Land hits to build <b>damage %</b> — the higher it climbs, the farther you fly.</li>
+              <li>Knock rivals past the <b>blast zone</b> to take a stock.</li>
+              <li>Run out of stocks and you're <b>eliminated</b>. Last fighter standing wins.</li>
+              <li><b>Recover</b> with double jumps and up-specials. Don't get greedy off-stage!</li>
+              <li><b>Shield</b> blocks hits but drains — let it break and you'll be stunned.</li>
+              <li>Dodge rolls make you briefly <b>invincible</b>. Read your opponent.</li>
+            </ul>
+            <h3>LAN PLAY</h3>
+            <ul class="rules-list">
+              <li>One player <b>hosts</b> an arena; others <b>join</b> from the match browser or room code.</li>
+              <li>Everyone on the same network opens this page from the host's address (see the server console).</li>
+              <li>Up to 4 fighters per arena — fill empty slots with CPU players.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" id="btn-howto-back">BACK</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ LOBBY ============================ -->
+  <section class="screen" id="screen-lobby">
+    <div class="lobby-wrap">
+      <div class="lobby-head">
+        <div>
+          <h1 class="lobby-title" id="lobby-name">ARENA</h1>
+          <div class="lobby-sub">
+            ROOM CODE:
+            <button class="code-chip" id="lobby-code" title="Copy room code">ABCD-12</button>
+            <span class="lobby-state" id="lobby-state">waiting for players</span>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-ghost" id="btn-leave-lobby">LEAVE</button>
+        </div>
+      </div>
+
+      <div class="lobby-grid">
+        <div class="lobby-col">
+          <h3 class="col-title">FIGHTERS</h3>
+          <div class="slot-list" id="slot-list"></div>
+          <button class="btn btn-ghost" id="btn-add-bot">+ ADD CPU</button>
+        </div>
+
+        <div class="lobby-col">
+          <h3 class="col-title">CHARACTER</h3>
+          <div class="char-select" id="char-select"></div>
+          <div class="char-detail" id="char-detail"></div>
+        </div>
+
+        <div class="lobby-col">
+          <h3 class="col-title">RULES</h3>
+          <div class="rules-box" id="lobby-rules"></div>
+          <div class="lobby-actions">
+            <div class="ready-row">
+              <button class="btn btn-ghost" id="btn-ready">READY UP</button>
+              <button class="btn btn-primary btn-big" id="btn-start-game">START GAME</button>
+            </div>
+            <div class="ready-hint" id="ready-hint">Players must ready up before the host can start.</div>
+          </div>
+          <h3 class="col-title">CHAT</h3>
+          <div class="chat" id="chat">
+            <div class="chat-log" id="chat-log"></div>
+            <div class="chat-row">
+              <input id="chat-input" maxlength="140" placeholder="Say something…" autocomplete="off" />
+              <button class="btn btn-ghost" id="btn-chat-send">SEND</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ HUD ============================ -->
+  <div class="hud" id="hud">
+    <div class="hud-top">
+      <div class="hud-timer" id="hud-timer">8:00</div>
+      <div class="hud-stage" id="hud-stage"></div>
+    </div>
+    <div class="hud-countdown" id="hud-countdown"></div>
+    <div class="hud-banner" id="hud-banner"></div>
+    <div class="hud-players" id="hud-players"></div>
+    <div class="pause-overlay" id="pause-overlay">
+      <div class="pause-box">
+        <h2>PAUSED</h2>
+        <p class="pause-note">The match runs on the server — it keeps going while you're here!</p>
+        <button class="btn btn-primary btn-big" id="btn-resume">RESUME</button>
+        <button class="btn btn-ghost" id="btn-pause-howto">CONTROLS</button>
+        <button class="btn btn-danger" id="btn-quit-match">LEAVE MATCH</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================ RESULTS ============================ -->
+  <section class="screen" id="screen-results">
+    <div class="panel-wrap wide">
+      <h1 class="screen-title" id="results-title">GAME!</h1>
+      <div class="panel">
+        <div class="results-list" id="results-list"></div>
+        <div class="btn-row">
+          <button class="btn btn-ghost" id="btn-results-leave">LEAVE ARENA</button>
+          <button class="btn btn-primary btn-big" id="btn-rematch">REMATCH</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ SETTINGS ============================ -->
+  <section class="screen" id="screen-settings">
+    <div class="panel-wrap">
+      <h1 class="screen-title">SETTINGS</h1>
+      <div class="panel">
+        <label class="field-label">MASTER VOLUME: <b id="vol-val">60%</b></label>
+        <input type="range" id="vol-master" min="0" max="100" value="60" />
+        <label class="field-label">SFX VOLUME: <b id="sfx-val">80%</b></label>
+        <input type="range" id="vol-sfx" min="0" max="100" value="80" />
+        <label class="field-label">MUSIC VOLUME: <b id="mus-val">35%</b></label>
+        <input type="range" id="vol-mus" min="0" max="100" value="35" />
+        <label class="field-label">SCREEN SHAKE</label>
+        <label class="toggle"><input type="checkbox" id="opt-shake" checked /> enabled</label>
+        <label class="field-label">SHOW NAMES</label>
+        <label class="toggle"><input type="checkbox" id="opt-names" checked /> enabled</label>
+        <div class="btn-row">
+          <button class="btn btn-primary" id="btn-settings-back">BACK</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="toasts" id="toasts"></div>
+  <div class="conn-lost" id="conn-lost">
+    <div class="pause-box">
+      <h2>CONNECTION LOST</h2>
+      <p>The link to the arena server dropped.</p>
+      <button class="btn btn-primary btn-big" id="btn-reconnect">RECONNECT</button>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
