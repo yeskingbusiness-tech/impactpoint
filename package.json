@@ -1,0 +1,35 @@
+{
+  "name": "impactpoint-arena",
+  "version": "1.0.0",
+  "description": "Smash-style LAN multiplayer platform fighter with host/join matchmaking",
+  "scripts": {
+    "test": "node test/run-all.js",
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yeskingbusiness-tech/impactpoint.git"
+  },
+  "keywords": [
+    "game",
+    "platform-fighter",
+    "multiplayer",
+    "lan",
+    "websocket",
+    "smash"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yeskingbusiness-tech/impactpoint/issues"
+  },
+  "homepage": "https://github.com/yeskingbusiness-tech/impactpoint#readme",
+  "type": "module",
+  "dependencies": {
+    "ws": "^8.22.0"
+  },
+  "devDependencies": {
+    "jsdom": "^30.1.3"
+  }
+}
